@@ -16,6 +16,17 @@ router.get('/users', (req,res) =>{
 
 });
 
+router.post('/user/login', (req, res) => {
+    AdminUserModel.findOne({"email" : req.body.email}, (err, response) =>{
+        if (err) throw err;
+        if(response){
+            res.status(202).send({status: 202, userID: response._id});
+        }else {
+            res.status(203).send({status: 203});
+        }
+    });
+});
+
 // Create a new user.
 router.post('/create', (req,res) =>{
 
@@ -38,7 +49,6 @@ router.post('/create', (req,res) =>{
         }
     });
 });
-
 // Delete user by ID
 router.delete('/user/:userID', (req,res) =>{
     AdminUserModel.findByIdAndDelete(req.params.userID,(err,user) =>{
