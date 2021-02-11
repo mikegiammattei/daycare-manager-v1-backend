@@ -17,12 +17,26 @@ router.get('/users', (req,res) =>{
 });
 
 router.post('/user/login', (req, res) => {
-    AdminUserModel.findOne({"email" : req.body.email}, (err, response) =>{
+    AdminUserModel.findOne({"email" : req.body.email,"password" : req.body.password}, (err, response) =>{
         if (err) throw err;
         if(response){
             res.status(202).send({status: 202, userID: response._id});
         }else {
             res.status(203).send({status: 203});
+        }
+    });
+});
+
+// Get user by ID
+router.get('/user/:userID', (req,res) =>{
+    AdminUserModel.findById(req.params.userID,(err,user) =>{
+        if(err){
+            res.status(500).send(err);
+        } else if(user !== null){
+            res.send({ status: '202', userData: user});
+        } else{
+            res.send({ status: '203 ', message: "No user found"});
+
         }
     });
 });
