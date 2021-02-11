@@ -19,4 +19,4 @@ const adminRoute = require('./routes/api/admin-user');
 app.use('/api/admin', adminRoute);
 
 app.listen(port, () => console.log(`Example app listening at http://localhost:${port}`));
-// Test 1
+// Test 2
