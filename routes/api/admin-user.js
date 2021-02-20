@@ -27,6 +27,19 @@ router.post('/user/login', (req, res) => {
     });
 });
 
+// Update User user by ID
+router.patch('/user/:id', (req,res) =>{
+
+    AdminUserModel.findByIdAndUpdate(req.params.id, req.body, (err, results) => {
+        if (err) throw err;
+        if(results){
+            res.send({status: 202, message: "User Updated"});
+        }else {
+            res.send({status: 203, message: "Unauthorized"});
+        }
+    });
+});
+
 // Get user by ID
 router.get('/user/:userID', (req,res) =>{
     AdminUserModel.findById(req.params.userID,(err,user) =>{
@@ -40,7 +53,6 @@ router.get('/user/:userID', (req,res) =>{
         }
     });
 });
-
 // Create a new user.
 router.post('/create', (req,res) =>{
 
