@@ -18,5 +18,8 @@ app.get('/', (req,res) =>{
 const adminRoute = require('./routes/api/admin-user');
 app.use('/api/admin', adminRoute);
 
+const CRMLeadRoute = require('./routes/api/crm-leads');
+app.use('/api/crm', CRMLeadRoute);
+
 app.listen(port, () => console.log(`Example app listening at http://localhost:${port}`));
 // Test 2
