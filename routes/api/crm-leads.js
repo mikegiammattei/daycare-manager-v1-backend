@@ -7,8 +7,9 @@ const mongoose = require('../../database/mongoose');
 const CRMLeadrModel = require('../../database/models/crm-lead');
 
 // Get list of users
-router.get('/lead', (req,res) =>{
-    CRMLeadrModel.find({}, { password: 0,__v: 0})
+router.get('/leads', (req,res) =>{
+    console.log('here');
+    CRMLeadrModel.find({})
         .then((users) => {
             res.send({users:users});
         })
@@ -30,12 +31,13 @@ router.patch('/lead/:id', (req,res) =>{
 });
 
 // Get user by ID
-router.get('/lead/:userID', (req,res) =>{
-    CRMLeadrModel.findById(req.params.userID,(err,user) =>{
+router.get('/lead/:leadID', (req,res) =>{
+    console.log(req.params);
+    CRMLeadrModel.findById(req.params.leadID,(err,lead) =>{
         if(err){
             res.status(500).send(err);
-        } else if(user !== null){
-            res.send({ status: '202', userData: user});
+        } else if(lead !== null){
+            res.send({ status: '202', lead});
         } else{
             res.send({ status: '203 ', message: "No user found"});
         }
@@ -45,16 +47,18 @@ router.get('/lead/:userID', (req,res) =>{
 // Create a new user.
 router.post('/lead', (req,res) =>{
 
+    console.log( req.body);
     let newUser = new CRMLeadrModel({
         firstName : req.body.firstName,
         lastName : req.body.lastName,
-        email : req.body.email,
-        password : req.body.password,
+        phone : req.body.phone,
+        callerType : req.body.callerType,
     });
     newUser.save((err, user) =>{
+        console.log(err);
         if(err){
             if(err.code === 11000){
-                res.send({status: 409,message: 'Email Exists'});
+                res.send({status: 409,message: 'Phone Exists'});
             }else{
                 res.sendStatus(500);
             }
