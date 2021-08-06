@@ -6,9 +6,10 @@ const mongoose = require('../../database/mongoose');
 // Database Models
 const CRMLeadrModel = require('../../database/models/crm-lead');
 
+const CRMLeadCommentModel = require('../../database/models/crm-lead-comment')
+
 // Get list of users
 router.get('/leads', (req,res) =>{
-    console.log('here');
     CRMLeadrModel.find({})
         .then((users) => {
             res.send({users:users});
@@ -32,7 +33,6 @@ router.patch('/lead/:id', (req,res) =>{
 
 // Get user by ID
 router.get('/lead/:leadID', (req,res) =>{
-    console.log(req.params);
     CRMLeadrModel.findById(req.params.leadID,(err,lead) =>{
         if(err){
             res.status(500).send(err);
@@ -47,13 +47,13 @@ router.get('/lead/:leadID', (req,res) =>{
 // Create a new user.
 router.post('/lead', (req,res) =>{
 
-    console.log( req.body);
     let newUser = new CRMLeadrModel({
         firstName : req.body.firstName,
         lastName : req.body.lastName,
         phone : req.body.phone,
         callerType : req.body.callerType,
     });
+
     newUser.save((err, user) =>{
         console.log(err);
         if(err){
@@ -68,6 +68,7 @@ router.post('/lead', (req,res) =>{
         }
     });
 });
+
 // Delete user by ID
 router.delete('/lead/:userID', (req,res) =>{
     CRMLeadrModel.findByIdAndDelete(req.params.userID,(err,user) =>{
@@ -80,6 +81,7 @@ router.delete('/lead/:userID', (req,res) =>{
         }
     });
 });
+
 // Delete all users
 router.delete('/lead', (req,res) =>{
     CRMLeadrModel.deleteMany()
@@ -90,5 +92,36 @@ router.delete('/lead', (req,res) =>{
             res.send({err});
         });
 
+});
+
+// Create lead commment
+router.post('/lead/comment', (req,res) =>{
+    let newComment = new CRMLeadCommentModel({
+        leadID: req.body.leadID,
+        comment: req.body.comment
+    });
+    newComment.save((err,commentData) =>{
+        if(err){
+            if(err.code === 11000){
+                res.send({status: 409,err: err});
+            }
+        }else{
+            res.status(202).send({status: 202, commentID: commentData});
+        }
+    })
+   
+});
+
+// Get Lead comments by lead ID
+router.get('/lead/comment/:leadID', (req,res) =>{
+    CRMLeadCommentModel.find({'leadID': req.params.leadID },(err,comments) =>{
+        if(err){
+            res.status(500).send(err);
+        } else if(comments !== null){
+            res.send({ status: '202', comments});
+        } else{
+            res.send({ status: '203 ', message: "No user found"});
+        }
+    });
 });
 module.exports = router;
