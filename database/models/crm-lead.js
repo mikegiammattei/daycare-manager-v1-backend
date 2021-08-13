@@ -21,6 +21,18 @@ const CRMLeadSchema = new mongoose.Schema({
         type: String,
         required: "Caller Type is required"
     },
+    email: {
+        type: String,
+        lowercase: true,
+        unique: false
+    }, 
+    status: {
+        type: Number,
+        default: 1
+    },
+    goal: {
+        type: String
+    },
     dateCreated:{
         type: Date,
         default: Date.now

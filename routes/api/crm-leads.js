@@ -52,6 +52,7 @@ router.post('/lead', (req,res) =>{
         lastName : req.body.lastName,
         phone : req.body.phone,
         callerType : req.body.callerType,
+        goal: req.body.goal
     });
 
     newUser.save((err, user) =>{
@@ -106,7 +107,7 @@ router.post('/lead/comment', (req,res) =>{
                 res.send({status: 409,err: err});
             }
         }else{
-            res.status(202).send({status: 202, commentID: commentData});
+            res.status(202).send({status: 202, commentData: commentData});
         }
     })
    
